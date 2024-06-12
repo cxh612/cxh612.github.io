@@ -6,6 +6,7 @@
     <title>Tuanjie WebGL Player | New Tuanjie Project</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
   </head>
   <body>
     <div id="tuanjie-container" class="tuanjie-desktop">
@@ -24,9 +25,9 @@
       </div>
     </div>
 	
-	
+    <script src="tellib.js"></script>
     <script>
-
+      var unity;
       var container = document.querySelector("#tuanjie-container");
       var canvas = document.querySelector("#tuanjie-canvas");
       var loadingBar = document.querySelector("#tuanjie-loading-bar");
@@ -59,11 +60,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/cxh612.github.io.loader.js";
+      var loaderUrl = buildUrl + "/html.loader.js";
       var config = {
-        dataUrl: buildUrl + "/cxh612.github.io.data",
-        frameworkUrl: buildUrl + "/cxh612.github.io.framework.js",
-        codeUrl: buildUrl + "/cxh612.github.io.wasm",
+        dataUrl: buildUrl + "/html.data",
+        frameworkUrl: buildUrl + "/html.framework.js",
+        codeUrl: buildUrl + "/html.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "New Tuanjie Project",
@@ -99,15 +100,23 @@
         canvas.style.width = "600px";
         canvas.style.height = "960px";
       }
+      function OpenNewWindow(str) {
+       
+        unity.SendMessage('Cameras','JsToUnity','cccccc');
+      }    
 
+      function CloseNewWindow() {
+        unity.SendMessage('Cameras','JsToUnity','aaaaaaa');
+        DemoApp.expand();
+      }   
       loadingBar.style.display = "block";
-
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createTuanjieInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
               }).then((tuanjieInstance) => {
+                unity = tuanjieInstance;
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
                   tuanjieInstance.SetFullscreen(1);
