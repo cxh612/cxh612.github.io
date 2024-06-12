@@ -117,6 +117,7 @@
           progressBarFull.style.width = 100 * progress + "%";
               }).then((tuanjieInstance) => {
                 unity = tuanjieInstance;
+                DemoApp.expand();
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
                   tuanjieInstance.SetFullscreen(1);
