@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Game Score</title>
+</head>
+<body>
+    <h1>Set Game Score</h1>
+    
+    <button id="getUpdatesButton">Get Updates</button>
+    <pre id="updatesOutput"></pre>
+
+    <form id="setScoreForm" style="display:none;">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId" readonly><br><br>
+
+        <label for="chatId">Chat ID:</label>
+        <input type="text" id="chatId" name="chatId" readonly><br><br>
+
+        <label for="messageId">Message ID:</label>
+        <input type="text" id="messageId" name="messageId" readonly><br><br>
+
+        <button type="button" id="getScoreButton">Get Current Score</button>
+        <pre id="scoreOutput"></pre>
+
+        <label for="score">New Score:</label>
+        <input type="number" id="score" name="score" required><br><br>
+
+        <button type="submit">Set Score</button>
+        <button id="sendInvoiceButton">Send Invoice</button>
+    </form>
+
+    <script>
+        const botToken = '6995785337:AAEeOKkPAc0XydtP0ikczswKRQ9b_MoA7bs';  // Replace with your bot's token
+        document.getElementById('sendInvoiceButton').addEventListener('click', function() {
+            const url = `https://api.telegram.org/bot${botToken}/sendInvoice`;
+            const chatId = document.getElementById('chatId').value;
+            const params = {
+                chat_id: chatId,
+                title: 'Product Title',
+                description: 'Product Description',
+                payload: 'UniquePayload',  // A unique payload to identify the invoice
+                provider_token: '284685063:TEST:MTJhZDhhYzNlMDEz',  // Replace with your payment provider token
+                currency: 'USD',
+                prices: JSON.stringify([{ label: 'Product Price', amount: 1000 }]),  // Amount is in the smallest units of the currency (e.g., cents for USD)
+                start_parameter: 'start_parameter',
+                photo_url: 'https://png.pngtree.com/png-vector/20210701/ourmid/pngtree-online-payment-concept-mobile-payment-swiping-card-png-image_3547613.jpg',  // Optional: URL of the product photo
+                photo_width: 640,  // Optional: Width of the product photo
+                photo_height: 480,  // Optional: Height of the product photo
+                need_name: true,  // Optional: Request the user's name
+                need_phone_number: true,  // Optional: Request the user's phone number
+                need_email: true,  // Optional: Request the user's email
+                need_shipping_address: false,  // Optional: Request the user's shipping address
+                send_phone_number_to_provider: true,  // Optional: Send the user's phone number to the payment provider
+                send_email_to_provider: true,  // Optional: Send the user's email to the payment provider
+                is_flexible: false  // Optional: If true, the final price depends on the shipping method
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('Invoice sent successfully!');
+                } else {
+                    alert(`Failed to send invoice: ${data.description}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error sending invoice');
+            });
+        });
+        document.getElementById('getUpdatesButton').addEventListener('click', function() {
+            fetch(`https://api.telegram.org/bot${botToken}/getUpdates`)
+                .then(response => response.json())
+                .then(data => {
+                    const output = document.getElementById('updatesOutput');
+                    output.textContent = JSON.stringify(data.result, null, 2);
+
+                    if (data.ok && data.result.length > 0) {
+                        const update = data.result[data.result.length - 1];
+                        const userId = update.message.from.id;
+                        const chatId = update.message.chat.id;
+                        const messageId = update.message.message_id;
+
+                        document.getElementById('userId').value = userId;
+                        document.getElementById('chatId').value = chatId;
+                        document.getElementById('messageId').value = messageId;
+
+                        document.getElementById('setScoreForm').style.display = 'block';
+                    } else {
+                        alert('No updates found or failed to get updates');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error getting updates');
+                });
+        });
+
+        document.getElementById('getScoreButton').addEventListener('click', function() {
+            const userId = document.getElementById('userId').value;
+            const chatId = document.getElementById('chatId').value;
+            const messageId = document.getElementById('messageId').value;
+
+            const url = `https://api.telegram.org/bot${botToken}/getGameHighScores`;
+
+            const params = {
+                user_id: userId,
+                chat_id: chatId,
+                message_id: messageId
+            };
+
+            fetch(`${url}?${new URLSearchParams(params)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const scoreOutput = document.getElementById('scoreOutput');
+                    scoreOutput.textContent = JSON.stringify(data.result, null, 2);
+
+                    if (data.ok) {
+                        const currentScore = data.result.find(score => score.user.id == userId)?.score || 0;
+                        alert(`Current Score: ${currentScore}`);
+                    } else {
+                        alert(`Failed to get score: ${data.description}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error getting score');
+                });
+        });
+
+        document.getElementById('setScoreForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const userId = document.getElementById('userId').value;
+            const chatId = document.getElementById('chatId').value;
+            const messageId = document.getElementById('messageId').value;
+            const score = document.getElementById('score').value;
+
+            const url = `https://api.telegram.org/bot${botToken}/setGameScore`;
+
+            const params = {
+                user_id: userId,
+                score: score,
+                chat_id: chatId,
+                message_id: messageId,
+                force: true  // Optional parameter
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('Score set successfully!');
+                } else {
+                    alert(`Failed to set score: ${data.description}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error setting score');
+            });
+        });
+    </script>
+</body>
+</html>
