@@ -106,13 +106,26 @@
      }    
 
      function CloseNewWindow() {
-       unity.SendMessage('Cameras','JsToUnity','aaaaaaa');
-       DemoApp.expand();
+        unity.SendMessage('Cameras','JsToUnity','aaaaaaa');
+        DemoApp.expand();
         const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
-        Telegram.WebApp.openTelegramLink(paymentLink);
+       // Telegram.WebApp.openTelegramLink(paymentLink);
+        try {
+                Telegram.WebApp.openInvoice(paymentLink, function(response) {
+                    console.log('Payment response:', response);  // Debugging: Log the response
+                    if (response.ok) {
+                        alert('Payment successful!');
+                    } else {
+                        alert(`Failed to process payment: ${response.error}`);
+                    }
+                });
+        } catch (error) {
+                console.error('Error opening invoice:', error);  // Debugging: Log the error
+                alert('Error opening invoice');
+        } 
      }   
       loadingBar.style.display = "block";
-
+       DemoApp.expand();
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
@@ -120,7 +133,7 @@
           progressBarFull.style.width = 100 * progress + "%";
               }).then((tuanjieInstance) => {
                 unity = tuanjieInstance;
-                DemoApp.expand();
+               
                 Telegram.WebApp.ready();
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
