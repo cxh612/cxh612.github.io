@@ -96,27 +96,25 @@
 
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-
         canvas.style.width = "600px";
         canvas.style.height = "960px";
       }
       function OpenNewWindow(str) {
-       
        unity.SendMessage('Cameras','JsToUnity','Pay');
      }    
-
+    DemoApp.expand();
      function CloseNewWindow() {
-        unity.SendMessage('Cameras','JsToUnity','aaaaaaa');
+        unity.SendMessage('Cameras','JsToUnity','Buy Something...');
         DemoApp.expand();
         const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
        // Telegram.WebApp.openTelegramLink(paymentLink);
         try {
                 Telegram.WebApp.openInvoice(paymentLink, function(response) {
                     console.log('Payment response:', response);  // Debugging: Log the response
-                    if (response.ok) {
-                        alert('Payment successful!');
+                    if (response.ok) {			    
+			unity.SendMessage('Cameras','JsToUnity','Payment successful!');
                     } else {
-                        alert(`Failed to process payment: ${response.error}`);
+			unity.SendMessage('Cameras','JsToUnity',Failed to process payment: ${response.error}`);
                     }
                 });
         } catch (error) {
