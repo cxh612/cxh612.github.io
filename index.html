@@ -108,28 +108,8 @@
      function CloseNewWindow() {
        unity.SendMessage('Cameras','JsToUnity','aaaaaaa');
        DemoApp.expand();
-
-       const payload = 'UniquePayload';
-
-       const invoice = {
-           title: 'Game Item',
-           description: 'Purchase a special item for your game',
-           payload: payload,
-           currency: 'XTR',
-           prices: [{ label: 'Item Price', amount: 500 }],  // Amount is in the smallest units of the currency (e.g., cents for USD)
-           photo_url: 'https://www.ign.com.cn/sm/t/ign_cn/screenshot/default/01_mye3.960.jpg',
-           photo_width: 640,
-           photo_height: 480,
-           start_parameter: 'start_parameter'
-       };
-
-       Telegram.WebApp.openInvoice(invoice, function(response) {
-           if (response.ok) {
-               alert('Payment successful!');
-           } else {
-               alert(`Failed to process payment: ${response.error}`);
-           }
-       });
+	const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
+        window.open(paymentLink, '_blank');
      }   
       loadingBar.style.display = "block";
 
