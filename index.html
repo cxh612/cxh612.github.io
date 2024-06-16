@@ -114,7 +114,7 @@
                     if (response.ok) {			    
 			unity.SendMessage('Cameras','JsToUnity','Payment successful!');
                     } else {
-			unity.SendMessage('Cameras','JsToUnity','Failed to process payment: ${response.error}`);
+			unity.SendMessage('Cameras','JsToUnity','Failed to process payment: response.error`);
                     }
                 });
         } catch (error) {
