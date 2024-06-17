@@ -106,7 +106,9 @@
      function CloseNewWindow() {
         unity.SendMessage('Cameras','JsToUnity','Buy Something...');
         DemoApp.expand();
-        const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
+       // const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
+	const paymentLink = 'https://t.me/$-e6wzRB1iUsCAAAA-L30r9dBhpk';
+	     
        // Telegram.WebApp.openTelegramLink(paymentLink);
         try {
                 Telegram.WebApp.openInvoice(paymentLink, function(response) {
