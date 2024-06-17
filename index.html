@@ -109,20 +109,20 @@
        // const paymentLink = 'https://t.me/$JzTDsZJBeFcXAQAAxB5z3bNqOaw';
 	const paymentLink = 'https://t.me/$-e6wzRB1iUsCAAAA-L30r9dBhpk';
 	     
-       // Telegram.WebApp.openTelegramLink(paymentLink);
-        try {
-                Telegram.WebApp.openInvoice(paymentLink, function(response) {
-                    console.log('Payment response:', response);  // Debugging: Log the response
-                    if (response.ok) {			    
-			unity.SendMessage('Cameras','JsToUnity','Payment successful!');
-                    } else {
-			unity.SendMessage('Cameras','JsToUnity',`Failed to process payment: ${response.error}`);
-                    }
-                });
-        } catch (error) {
-                console.error('Error opening invoice:', error);  // Debugging: Log the error
-                alert('Error opening invoice');
-        } 
+        Telegram.WebApp.openTelegramLink(paymentLink);
+   //      try {
+   //              Telegram.WebApp.openInvoice(paymentLink, function(response) {
+   //                  console.log('Payment response:', response);  // Debugging: Log the response
+   //                  if (response.ok) {			    
+			// unity.SendMessage('Cameras','JsToUnity','Payment successful!');
+   //                  } else {
+			// unity.SendMessage('Cameras','JsToUnity',`Failed to process payment: ${response.error}`);
+   //                  }
+   //              });
+   //      } catch (error) {
+   //              console.error('Error opening invoice:', error);  // Debugging: Log the error
+   //              alert('Error opening invoice');
+   //      } 
      }   
       loadingBar.style.display = "block";
        DemoApp.expand();
